@@ -174,22 +174,27 @@ const ToDoScreen = () => {
         style={styles.list}
         data={todolist}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.todoItem}>
-            <Text style={styles.todoText}>{item.title}</Text>
-            <View style={styles.todoActions}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => handleEditToDo(item)}
-              >
-                <Ionicons name="pencil" size={20} />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => handleDeleteToDo(item.id)}>
-                <Ionicons name="trash" size={20} />
-              </TouchableOpacity>
+        renderItem={({ item }) => {
+          // Find the category for this task
+          const category = categories.find(cat => cat.id === item.categoryId);
+          const borderColor = category && category.color ? category.color : "#1e90ff";
+          return (
+            <View style={[styles.todoItem, { borderColor }]}> 
+              <Text style={styles.todoText}>{item.title}</Text>
+              <View style={styles.todoActions}>
+                <TouchableOpacity
+                  style={styles.editButton}
+                  onPress={() => handleEditToDo(item)}
+                >
+                  <Ionicons name="pencil" size={20} color="#1e90ff" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleDeleteToDo(item.id)}>
+                  <Ionicons name="trash" size={20} color="red" />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
+          );
+        }}
         ItemSeparatorComponent={() => <View style={{ height: 12 }} />}
       />
 
@@ -279,21 +284,23 @@ const styles = StyleSheet.create({
   },
   todoItem: {
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 12,
-    borderWidth: 2,
-    borderColor: "#1e90ff",
-    borderRadius: 6,
-    backgroundColor: "white",
+    marginBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+    paddingBottom: 4,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 16,
     paddingHorizontal: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 3.0,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    overflow: 'hidden',
   },
   todoText: {
-    fontSize: 16,
+    flex: 1,
+    fontSize: 18,
+    height: 40,
+    textAlignVertical: 'center',
   },
   todoActions: {
     flexDirection: "row",
