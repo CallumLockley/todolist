@@ -1,45 +1,58 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { Text, StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ToDoScreen from "./src/screen/ToDoScreen";
+import CategoryScreen from "./src/screen/CategoryScreen";
+import { Ionicons } from "@expo/vector-icons";
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <NavigationContainer>
       <StatusBar style="auto" />
-      <View style={{ flex: 1 }}>
-        {/* Header */}
-        <View
-          style={{
-            backgroundColor: "#1e90ff",
-            paddingVertical: 24,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ color: "#fff", fontSize: 28, fontWeight: "bold", letterSpacing: 1 }}>
-            ToDo List
-          </Text>
-        </View>
-        <ToDoScreen />
-      </View>
-      {/* Footer anchored to bottom */}
-      <View
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: "#fff",
-          alignItems: "center",
-          paddingVertical: 12,
-        }}
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ color, size }) => {
+            let iconName;
+            if (route.name === "ToDo") iconName = "list";
+            else if (route.name === "Categories") iconName = "pricetags";
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+          tabBarActiveTintColor: styles.tabBarActiveTintColor,
+          tabBarInactiveTintColor: styles.tabBarInactiveTintColor,
+          headerStyle: styles.headerStyle,
+          headerTitleStyle: styles.headerTitleStyle,
+          headerTitleAlign: "center",
+        })}
       >
-        <Text style={{ color: "#888", fontSize: 14 }}>
-          © {new Date().getFullYear()} Callum Lockley. All rights reserved.
-        </Text>
-      </View>
-    </SafeAreaView>
+        <Tab.Screen
+          name="ToDo"
+          component={ToDoScreen}
+          options={{ title: "Tasks" }}
+        />
+        <Tab.Screen
+          name="Categories"
+          component={CategoryScreen}
+          options={{ title: "Tags" }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({});
+// Styles
+const styles = StyleSheet.create({
+  tabBarActiveTintColor: "#1e90ff",
+  tabBarInactiveTintColor: "gray",
+  headerStyle: { backgroundColor: "#1e90ff" },
+  headerTitleStyle: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 24,
+    textAlign: "center",
+    alignSelf: "center",
+    width: "100%",
+  },
+});
